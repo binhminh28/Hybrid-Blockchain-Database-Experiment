@@ -1,0 +1,2 @@
+Throughput of 8 drivers with 16 concurrency to handle 100000 requests: 9274 req/s
+Average latency: 13.78195055 ms

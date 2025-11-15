@@ -1,0 +1,58 @@
+++ NODES='4 8 14'
+++ DEFAULT_NODES=4
+++ IPPREFIX=192.168.30
+++ THREADS='4 8 16 32 64 128 192 256'
+++ WORKLOADS='workloada workloadb workloadc'
+++ DEFAULT_WORKLOAD=workloada
+++ DEFAULT_WORKLOAD_PATH=temp/ycsb_data
+++ DISTRIBUTIONS='uniform latest zipfian'
+++ TXDELAYS='0 10 100 1000'
+++ TXSIZES='512B 2kB 8kB 32kB 128kB'
+++ BLKSIZES='10 100 1000 10000'
+++ DEFAULT_BLOCK_SIZE=100
+++ DEFAULT_DRIVERS_VERITAS_KAFKA=8
+++ DEFAULT_THREADS_VERITAS_KAFKA=256
+++ DEFAULT_DRIVERS_VERITAS_TM=8
+++ DEFAULT_THREADS_VERITAS_TM=256
+++ DEFAULT_THREADS_BIGCHAINDB=4
+++ DEFAULT_THREADS_BIGCHAINDBPV=4
++ HOST1=192.168.30.2
++ HOST2=192.168.30.3
++ ssh -o StrictHostKeyChecking=no root@192.168.30.2 'killall -9 iperf'
+iperf: no process found
++ sleep 1
++ sleep 3
++ ssh -o StrictHostKeyChecking=no root@192.168.30.2 'iperf -s'
+------------------------------------------------------------
+Server listening on TCP port 5001
+TCP window size:  128 KByte (default)
+------------------------------------------------------------
++ ssh -o StrictHostKeyChecking=no root@192.168.30.3 'iperf -c 192.168.30.2'
+------------------------------------------------------------
+Client connecting to 192.168.30.2, TCP port 5001
+TCP window size: 85.0 KByte (default)
+------------------------------------------------------------
+[  3] local 192.168.30.3 port 52422 connected with 192.168.30.2 port 5001
+[  4] local 192.168.30.2 port 5001 connected with 192.168.30.3 port 52422
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0-10.0 sec   903 MBytes   757 Mbits/sec
+[ ID] Interval       Transfer     Bandwidth
+[  4]  0.0-10.0 sec   903 MBytes   756 Mbits/sec
++ sleep 3
++ ssh -o StrictHostKeyChecking=no root@192.168.30.3 'ping -c 10 192.168.30.2'
+PING 192.168.30.2 (192.168.30.2) 56(84) bytes of data.
+64 bytes from 192.168.30.2: icmp_seq=1 ttl=64 time=30.1 ms
+64 bytes from 192.168.30.2: icmp_seq=2 ttl=64 time=30.1 ms
+64 bytes from 192.168.30.2: icmp_seq=3 ttl=64 time=30.1 ms
+64 bytes from 192.168.30.2: icmp_seq=4 ttl=64 time=30.1 ms
+64 bytes from 192.168.30.2: icmp_seq=5 ttl=64 time=30.1 ms
+64 bytes from 192.168.30.2: icmp_seq=6 ttl=64 time=30.1 ms
+64 bytes from 192.168.30.2: icmp_seq=7 ttl=64 time=30.1 ms
+64 bytes from 192.168.30.2: icmp_seq=8 ttl=64 time=30.1 ms
+64 bytes from 192.168.30.2: icmp_seq=9 ttl=64 time=30.0 ms
+64 bytes from 192.168.30.2: icmp_seq=10 ttl=64 time=30.1 ms
+
+--- 192.168.30.2 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9010ms
+rtt min/avg/max/mdev = 30.028/30.097/30.142/0.035 ms
++ ssh -o StrictHostKeyChecking=no root@192.168.30.2 'killall -9 iperf'
