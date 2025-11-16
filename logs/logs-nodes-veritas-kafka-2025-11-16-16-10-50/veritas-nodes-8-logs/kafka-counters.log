@@ -1,0 +1,29 @@
+1
+2
+3
+4
+5
+6
+7
+8
+
+GROUP           TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                  HOST            CLIENT-ID
+1               shared-log      0          10749           10749           0               rdkafka-7ed2256d-bccc-4c19-a4c8-53c0d7079175 /192.168.30.2   rdkafka
+
+GROUP           TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                  HOST            CLIENT-ID
+2               shared-log      0          10749           10749           0               rdkafka-980ed0e4-0712-4f3e-bc0f-cdeb489729d5 /192.168.30.3   rdkafka
+
+GROUP           TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                  HOST            CLIENT-ID
+4               shared-log      0          10749           10749           0               rdkafka-b671e0a6-8b39-4b56-8a86-6c3c40749d14 /192.168.30.5   rdkafka
+
+GROUP           TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                  HOST            CLIENT-ID
+5               shared-log      0          10749           10749           0               rdkafka-ceb3e2d4-f19c-4914-a90e-7989619da399 /192.168.30.6   rdkafka
+
+GROUP           TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                  HOST            CLIENT-ID
+6               shared-log      0          10749           10749           0               rdkafka-845cc647-10a8-4e5f-bf42-372c652c8572 /192.168.30.7   rdkafka
+
+GROUP           TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                  HOST            CLIENT-ID
+7               shared-log      0          10749           10749           0               rdkafka-d5b4d9e8-1491-4de4-b532-ba77528a43c2 /192.168.30.8   rdkafka
+
+GROUP           TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                  HOST            CLIENT-ID
+8               shared-log      0          10749           10749           0               rdkafka-71104ba7-0d6b-441a-a861-6279e852c26f /192.168.30.9   rdkafka
