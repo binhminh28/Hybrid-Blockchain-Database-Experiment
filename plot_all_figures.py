@@ -7,6 +7,25 @@ import numpy as np
 import matplotlib.ticker as ticker
 from matplotlib.ticker import ScalarFormatter
 
+# DPI mặc định khi lưu hình — tăng lên để chữ không bị mờ khi thu nhỏ
+SAVE_DPI = 300
+
+# Thiết lập font mặc định (in đậm) và kích thước lớn để chữ rõ hơn
+plt.rcParams.update({
+    'font.size': 18,
+    'font.weight': 'bold',
+    'axes.titlesize': 20,
+    'axes.titleweight': 'bold',
+    'axes.labelsize': 16,
+    'axes.labelweight': 'bold',
+    'xtick.labelsize': 14,
+    'ytick.labelsize': 14,
+    'legend.fontsize': 14,
+    'legend.title_fontsize': 14,
+    'figure.titlesize': 22,
+})
+
+
 print("=============================================")
 print("  Trình vẽ biểu đồ Hybrid Blockchain (Tất cả Figure)")
 print("=============================================")
@@ -275,6 +294,40 @@ def collect_all_data():
 # Sẽ được áp dụng cho TẤT CẢ các biểu đồ có thang logarit
 y_axis_formatter = ticker.FuncFormatter(lambda y, _: f'{y:.0f}')
 
+
+def set_even_xticks(ax, values, is_numeric=True, max_ticks=6):
+    """Set up to `max_ticks` evenly spaced ticks on `ax` for given `values`.
+    - If `is_numeric`, `values` should be a numeric array/Series.
+    - If not numeric, `values` should be an ordered list of category labels.
+    """
+    try:
+        if is_numeric:
+            arr = np.array(values, dtype=float)
+            uniq = np.unique(arr)
+            n = len(uniq)
+            if n == 0:
+                return
+            if n <= max_ticks:
+                ticks = uniq
+            else:
+                ticks = np.linspace(uniq.min(), uniq.max(), max_ticks)
+            ax.set_xticks(ticks)
+            ax.get_xaxis().set_major_formatter(ticker.ScalarFormatter())
+        else:
+            labels = list(values)
+            n = len(labels)
+            if n == 0:
+                return
+            if n <= max_ticks:
+                idx = np.arange(n)
+            else:
+                idx = np.linspace(0, n - 1, max_ticks).astype(int)
+            ticklabels = [labels[i] for i in idx]
+            ax.set_xticks(idx)
+            ax.set_xticklabels(ticklabels)
+    except Exception:
+        pass
+
 def plot_figure_5(df):
     if df.empty:
         print("\n[Bỏ qua Figure 5]: Không tìm thấy dữ liệu 'clients'.")
@@ -302,7 +355,7 @@ def plot_figure_5(df):
     ax2.get_xaxis().set_major_formatter(ticker.ScalarFormatter())
     ax2.get_yaxis().set_major_formatter(ticker.ScalarFormatter())
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-    plt.savefig("figure_5_clients_benchmark.png")
+    plt.savefig("figure_5_clients_benchmark.png", dpi=SAVE_DPI, bbox_inches='tight')
     print("✅ Đã lưu: figure_5_clients_benchmark.png")
     plt.close()
 
@@ -333,7 +386,7 @@ def plot_figure_7(df):
     ax2.get_xaxis().set_major_formatter(ticker.ScalarFormatter())
     ax2.get_yaxis().set_major_formatter(ticker.ScalarFormatter())
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-    plt.savefig("figure_7_nodes_benchmark.png")
+    plt.savefig("figure_7_nodes_benchmark.png", dpi=SAVE_DPI, bbox_inches='tight')
     print("✅ Đã lưu: figure_7_nodes_benchmark.png")
     plt.close()
 
@@ -346,16 +399,24 @@ def plot_figure_8(df):
     node_ticks = sorted(df['Nodes'].unique())
     plt.figure(figsize=(10, 7))
     ax = sns.lineplot(data=df, x="Nodes", y="Operations", hue="Operation Type", style="Operation Type", markers=True, dashes=True, linewidth=2.5)
-    ax.set_title('Figure 8: Ảnh hưởng của Số Node (Thao tác Kafka)', fontsize=16)
-    ax.set_xlabel('Số lượng Node (Server)', fontsize=12)
-    ax.set_ylabel('Số lượng Thao tác Kafka', fontsize=12)
+    ax.set_title('Figure 8: Ảnh hưởng của Số Node (Thao tác Kafka)', fontsize=26)
+    ax.set_xlabel('Số lượng Node (Server)', fontsize=22)
+    ax.set_ylabel('Số lượng Thao tác Kafka', fontsize=22)
     ax.set_yscale('log')
-    ax.legend(title='Loại Thao tác')
-    ax.set_xticks(node_ticks)
-    ax.get_xaxis().set_major_formatter(ticker.ScalarFormatter())
-    ax.get_yaxis().set_major_formatter(y_axis_formatter) # <-- ĐÃ ÁP DỤNG
+    leg = ax.legend(title='Loại Thao tác')
+    if leg:
+        try:
+            leg.get_title().set_fontweight('bold')
+            for t in leg.get_texts():
+                t.set_fontweight('bold')
+        except Exception:
+            pass
+    set_even_xticks(ax, df['Nodes'], is_numeric=True, max_ticks=6)
+    ax.get_yaxis().set_major_formatter(y_axis_formatter)
+    plt.setp(ax.get_xticklabels(), rotation=30, ha='right', fontweight='bold')
+    plt.setp(ax.get_yticklabels(), fontweight='bold')
     plt.tight_layout()
-    plt.savefig("figure_8_kafka_ops_benchmark.png")
+    plt.savefig("figure_8_kafka_ops_benchmark.png", dpi=SAVE_DPI, bbox_inches='tight')
     print("✅ Đã lưu: figure_8_kafka_ops_benchmark.png")
     plt.close()
 
@@ -375,7 +436,7 @@ def plot_figure_9_10_11(df9, df10, df11):
         ax.legend(title='Hệ thống')
         ax.get_yaxis().set_major_formatter(y_axis_formatter) # <-- ĐÃ ÁP DỤNG
         plt.tight_layout()
-        plt.savefig("figure_9_distribution.png")
+        plt.savefig("figure_9_distribution.png", dpi=SAVE_DPI, bbox_inches='tight')
         print("✅ Đã lưu: figure_9_distribution.png")
         plt.close()
 
@@ -394,7 +455,7 @@ def plot_figure_9_10_11(df9, df10, df11):
         ax.legend(title='Hệ thống')
         ax.get_yaxis().set_major_formatter(y_axis_formatter) # <-- ĐÃ ÁP DỤNG
         plt.tight_layout()
-        plt.savefig("figure_10_workload.png")
+        plt.savefig("figure_10_workload.png", dpi=SAVE_DPI, bbox_inches='tight')
         print("✅ Đã lưu: figure_10_workload.png")
         plt.close()
 
@@ -412,7 +473,7 @@ def plot_figure_9_10_11(df9, df10, df11):
         ax.legend(title='Cơ sở dữ liệu')
         ax.get_yaxis().set_major_formatter(y_axis_formatter) # <-- ĐÃ ÁP DỤNG
         plt.tight_layout()
-        plt.savefig("figure_11_database.png")
+        plt.savefig("figure_11_database.png", dpi=SAVE_DPI, bbox_inches='tight')
         print("✅ Đã lưu: figure_11_database.png")
         plt.close()
 
@@ -433,7 +494,7 @@ def plot_figure_12(df):
     ax.get_xaxis().set_major_formatter(ticker.FuncFormatter(lambda x, _: '{:g}'.format(x)))
     ax.get_yaxis().set_major_formatter(y_axis_formatter) # <-- ĐÃ ÁP DỤNG
     plt.tight_layout()
-    plt.savefig("figure_12_block_size.png")
+    plt.savefig("figure_12_block_size.png", dpi=SAVE_DPI, bbox_inches='tight')
     print("✅ Đã lưu: figure_12_block_size.png")
     plt.close()
     
@@ -454,7 +515,7 @@ def plot_figure_13_14(df13, df14):
         ax.legend(title='Hệ thống')
         ax.get_yaxis().set_major_formatter(y_axis_formatter) # <-- ĐÃ ÁP DỤNG
         plt.tight_layout()
-        plt.savefig("figure_13_record_size.png")
+        plt.savefig("figure_13_record_size.png", dpi=SAVE_DPI, bbox_inches='tight')
         print("✅ Đã lưu: figure_13_record_size.png")
         plt.close()
 
@@ -473,7 +534,7 @@ def plot_figure_13_14(df13, df14):
         ax.legend(title='Hệ thống')
         ax.get_yaxis().set_major_formatter(y_axis_formatter) # <-- ĐÃ ÁP DỤNG
         plt.tight_layout()
-        plt.savefig("figure_14_processing_time.png")
+        plt.savefig("figure_14_processing_time.png", dpi=SAVE_DPI, bbox_inches='tight')
         print("✅ Đã lưu: figure_14_processing_time.png")
         plt.close()
 
@@ -513,7 +574,7 @@ def plot_figure_15_16(df):
             ymin, ymax = ax.get_ylim()
             ax.set_ylim(ymin * 0.8, ymax * 1.2) # Thêm 20% padding
     
-    g_tps.savefig("figure_15_networking_throughput.png")
+    g_tps.savefig("figure_15_networking_throughput.png", dpi=SAVE_DPI, bbox_inches='tight')
     print("✅ Đã lưu: figure_15_networking_throughput.png")
     plt.close()
 
@@ -540,7 +601,7 @@ def plot_figure_15_16(df):
             padding = (ymax - ymin) * 0.1
             ax.set_ylim(max(0, ymin - padding), ymax + padding)
 
-    g_lat.savefig("figure_16_networking_latency.png")
+    g_lat.savefig("figure_16_networking_latency.png", dpi=SAVE_DPI, bbox_inches='tight')
     print("✅ Đã lưu: figure_16_networking_latency.png")
     plt.close()
 
