@@ -37,52 +37,52 @@ LOG_DIRECTORY = "logs"
 
 # Ánh xạ tên thư mục sang tên hệ thống (key) và loại thí nghiệm (value)
 DIR_REGEX_MAP = {
-    re.compile(r'logs-clients-veritas-kafka'): ("Veritas (Kafka)", "clients"),
+    re.compile(r'logs-clients-veritas-kafka(?!-tso)'): ("Veritas (Kafka)", "clients"),
     re.compile(r'logs-clients-veritas-tendermint'): ("Veritas (TM)", "clients"),
     re.compile(r'logs-clients-bigchaindb'): ("BigchainDB", "clients"),
     re.compile(r'logs-clients-bigchaindb-pv'): ("BigchainDB (PV)", "clients"),
     re.compile(r'logs-clients-blockchaindb'): ("BlockchainDB", "clients"),
     
-    re.compile(r'logs-nodes-veritas-kafka'): ("Veritas (Kafka)", "nodes"),
+    re.compile(r'logs-nodes-veritas-kafka(?!-tso)'): ("Veritas (Kafka)", "nodes"),
     re.compile(r'logs-nodes-veritas-tendermint'): ("Veritas (TM)", "nodes"),
     re.compile(r'logs-nodes-bigchaindb'): ("BigchainDB", "nodes"),
     re.compile(r'logs-nodes-bigchaindb-pv'): ("BigchainDB (PV)", "nodes"),
     re.compile(r'logs-nodes-blockchaindb'): ("BlockchainDB", "nodes"),
     
-    re.compile(r'logs-distribution-veritas-kafka'): ("Veritas (Kafka)", "distribution"),
+    re.compile(r'logs-distribution-veritas-kafka(?!-tso)'): ("Veritas (Kafka)", "distribution"),
     re.compile(r'logs-distribution-veritas-tendermint'): ("Veritas (TM)", "distribution"),
     re.compile(r'logs-distribution-bigchaindb'): ("BigchainDB", "distribution"),
     re.compile(r'logs-distribution-bigchaindb-pv'): ("BigchainDB (PV)", "distribution"),
     re.compile(r'logs-distribution-blockchaindb'): ("BlockchainDB", "distribution"),
 
-    re.compile(r'logs-workload-veritas-kafka'): ("Veritas (Kafka)", "workload"),
+    re.compile(r'logs-workload-veritas-kafka(?!-tso)'): ("Veritas (Kafka)", "workload"),
     re.compile(r'logs-workload-veritas-tendermint'): ("Veritas (TM)", "workload"),
     re.compile(r'logs-workload-bigchaindb'): ("BigchainDB", "workload"),
     re.compile(r'logs-workload-bigchaindb-pv'): ("BigchainDB (PV)", "workload"),
     re.compile(r'logs-workload-blockchaindb'): ("BlockchainDB", "workload"),
     
-    re.compile(r'logs-database-veritas-kafka'): ("Veritas (Kafka) - RediSQL", "database"), 
-    re.compile(r'logs-workload-veritas-kafka.*'): ("Veritas (Kafka) - Redis", "database"), 
+    re.compile(r'logs-database-veritas-kafka(?!-tso)'): ("Veritas (Kafka) - RediSQL", "database"), 
+    re.compile(r'logs-workload-veritas-kafka(?!-tso).*'): ("Veritas (Kafka) - Redis", "database"), 
 
-    re.compile(r'logs-txsizes-veritas-kafka'): ("Veritas (Kafka)", "txsize"),
+    re.compile(r'logs-txsizes-veritas-kafka(?!-tso)'): ("Veritas (Kafka)", "txsize"),
     re.compile(r'logs-txsizes-veritas-tendermint'): ("Veritas (TM)", "txsize"),
     re.compile(r'logs-txsizes-bigchaindb'): ("BigchainDB", "txsize"),
     re.compile(r'logs-txsizes-bigchaindb-pv'): ("BigchainDB (PV)", "txsize"),
     re.compile(r'logs-txsizes-blockchaindb'): ("BlockchainDB", "txsize"),
 
-    re.compile(r'logs-txdelay-veritas-kafka'): ("Veritas (Kafka)", "txdelay"),
+    re.compile(r'logs-txdelay-veritas-kafka(?!-tso)'): ("Veritas (Kafka)", "txdelay"),
     re.compile(r'logs-txdelay-veritas-tendermint'): ("Veritas (TM)", "txdelay"),
     re.compile(r'logs-txdelay-bigchaindb'): ("BigchainDB", "txdelay"),
     re.compile(r'logs-txdelay-bigchaindb-pv'): ("BigchainDB (PV)", "txdelay"),
     re.compile(r'logs-txdelay-blockchaindb'): ("BlockchainDB", "txdelay"),
 
-    re.compile(r'logs-networking-veritas-kafka'): ("Veritas (Kafka)", "networking"),
+    re.compile(r'logs-networking-veritas-kafka(?!-tso)'): ("Veritas (Kafka)", "networking"),
     re.compile(r'logs-networking-veritas-tendermint'): ("Veritas (TM)", "networking"),
     re.compile(r'logs-networking-bigchaindb'): ("BigchainDB", "networking"),
     re.compile(r'logs-networking-bigchaindb-pv'): ("BigchainDB (PV)", "networking"),
     re.compile(r'logs-networking-blockchaindb'): ("BlockchainDB", "networking"),
     
-    re.compile(r'logs-blksize-veritas-kafka'): ("Veritas (Kafka)", "blksize"),
+    re.compile(r'logs-blksize-veritas-kafka(?!-tso)'): ("Veritas (Kafka)", "blksize"),
     re.compile(r'logs-blksize-veritas-tendermint'): ("Veritas (TM)", "blksize"),
     re.compile(r'logs-blksize-blockchaindb'): ("BlockchainDB", "blksize"),
 }
@@ -337,7 +337,7 @@ def plot_figure_5(df):
     client_ticks = sorted(df['clients'].unique())
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 7))
     fig.suptitle('Figure 5: Ảnh hưởng của Số lượng Client', fontsize=16)
-    sns.lineplot(data=df, x="clients", y="throughput", hue="system", style="system", markers=True, dashes=True, ax=ax1, linewidth=2.5)
+    sns.lineplot(data=df, x="clients", y="throughput", hue="system", style="system", markers=True, dashes=True, ax=ax1, linewidth=2.5, estimator=None, ci=None)
     ax1.set_title('Thông lượng (TPS)', fontsize=14)
     ax1.set_xlabel('Số lượng Client (Concurrency)', fontsize=12)
     ax1.set_ylabel('Thông lượng (TPS)', fontsize=12)
@@ -346,7 +346,7 @@ def plot_figure_5(df):
     ax1.set_xticks(client_ticks)
     ax1.get_xaxis().set_major_formatter(ticker.ScalarFormatter())
     ax1.get_yaxis().set_major_formatter(y_axis_formatter) # <-- ĐÃ ÁP DỤNG
-    sns.lineplot(data=df, x="clients", y="latency", hue="system", style="system", markers=True, dashes=True, ax=ax2, linewidth=2.5)
+    sns.lineplot(data=df, x="clients", y="latency", hue="system", style="system", markers=True, dashes=True, ax=ax2, linewidth=2.5, estimator=None, ci=None)
     ax2.set_title('Độ trễ (Latency)', fontsize=14)
     ax2.set_xlabel('Số lượng Client (Concurrency)', fontsize=12)
     ax2.set_ylabel('Độ trễ Trung bình (ms)', fontsize=12)
@@ -368,7 +368,7 @@ def plot_figure_7(df):
     node_ticks = sorted(df['nodes'].unique())
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 7))
     fig.suptitle('Figure 7: Ảnh hưởng của Số lượng Node', fontsize=16)
-    sns.lineplot(data=df, x="nodes", y="throughput", hue="system", style="system", markers=True, dashes=True, ax=ax1, linewidth=2.5)
+    sns.lineplot(data=df, x="nodes", y="throughput", hue="system", style="system", markers=True, dashes=True, ax=ax1, linewidth=2.5, estimator=None, ci=None)
     ax1.set_title('Thông lượng (TPS)', fontsize=14)
     ax1.set_xlabel('Số lượng Node (Server)', fontsize=12)
     ax1.set_ylabel('Thông lượng (TPS)', fontsize=12)
@@ -377,7 +377,7 @@ def plot_figure_7(df):
     ax1.set_xticks(node_ticks)
     ax1.get_xaxis().set_major_formatter(ticker.ScalarFormatter())
     ax1.get_yaxis().set_major_formatter(y_axis_formatter) # <-- ĐÃ ÁP DỤNG
-    sns.lineplot(data=df, x="nodes", y="latency", hue="system", style="system", markers=True, dashes=True, ax=ax2, linewidth=2.5)
+    sns.lineplot(data=df, x="nodes", y="latency", hue="system", style="system", markers=True, dashes=True, ax=ax2, linewidth=2.5, estimator=None, ci=None)
     ax2.set_title('Độ trễ (Latency)', fontsize=14)
     ax2.set_xlabel('Số lượng Node (Server)', fontsize=12)
     ax2.set_ylabel('Độ trễ Trung bình (ms)', fontsize=12)
@@ -398,7 +398,7 @@ def plot_figure_8(df):
     df = df.sort_values(by="Nodes")
     node_ticks = sorted(df['Nodes'].unique())
     plt.figure(figsize=(10, 7))
-    ax = sns.lineplot(data=df, x="Nodes", y="Operations", hue="Operation Type", style="Operation Type", markers=True, dashes=True, linewidth=2.5)
+    ax = sns.lineplot(data=df, x="Nodes", y="Operations", hue="Operation Type", style="Operation Type", markers=True, dashes=True, linewidth=2.5, estimator=None, ci=None)
     ax.set_title('Figure 8: Ảnh hưởng của Số Node (Thao tác Kafka)', fontsize=26)
     ax.set_xlabel('Số lượng Node (Server)', fontsize=22)
     ax.set_ylabel('Số lượng Thao tác Kafka', fontsize=22)
@@ -484,7 +484,7 @@ def plot_figure_12(df):
     print("\nĐang vẽ Figure 12 (Block Size)...")
     df = df.sort_values(by="blksize")
     plt.figure(figsize=(10, 7))
-    ax = sns.lineplot(data=df, x="blksize", y="throughput", hue="system", style="system", markers=True, dashes=True, linewidth=2.5)
+    ax = sns.lineplot(data=df, x="blksize", y="throughput", hue="system", style="system", markers=True, dashes=True, linewidth=2.5, estimator=None, ci=None)
     ax.set_title('Figure 12: Ảnh hưởng của Kích thước Khối (Block Size)', fontsize=16)
     ax.set_xlabel('Kích thước Khối (Số lượng giao dịch)', fontsize=12)
     ax.set_ylabel('Thông lượng (TPS)', fontsize=12)
@@ -507,7 +507,7 @@ def plot_figure_13_14(df13, df14):
         df13['size_label'] = df13['size_label'].astype(str)
         df13 = df13.sort_values(by='size_kb')
         plt.figure(figsize=(10, 7))
-        ax = sns.lineplot(data=df13, x="size_label", y="throughput", hue="system", style="system", markers=True, dashes=True, linewidth=2.5)
+        ax = sns.lineplot(data=df13, x="size_label", y="throughput", hue="system", style="system", markers=True, dashes=True, linewidth=2.5, estimator=None, ci=None)
         ax.set_title('Figure 13: Ảnh hưởng của Kích thước Giao dịch', fontsize=16)
         ax.set_xlabel('Kích thước Key-Value', fontsize=12) 
         ax.set_ylabel('Thông lượng (TPS)', fontsize=12)
@@ -526,7 +526,7 @@ def plot_figure_13_14(df13, df14):
         df14 = df14.sort_values(by="delay_ms")
         df14['delay_ms_str'] = df14['delay_ms'].astype(str) + ' ms'
         plt.figure(figsize=(10, 7))
-        ax = sns.lineplot(data=df14, x="delay_ms_str", y="throughput", hue="system", style="system", markers=True, dashes=True, linewidth=2.5)
+        ax = sns.lineplot(data=df14, x="delay_ms_str", y="throughput", hue="system", style="system", markers=True, dashes=True, linewidth=2.5, estimator=None, ci=None)
         ax.set_title('Figure 14: Ảnh hưởng của Thời gian Xử lý Giao dịch', fontsize=16)
         ax.set_xlabel('Thời gian Xử lý (ms)', fontsize=12)
         ax.set_ylabel('Thông lượng (TPS)', fontsize=12)
@@ -557,7 +557,8 @@ def plot_figure_15_16(df):
         hue="Bandwidth", style="Bandwidth", col="System",
         kind="line", markers=True, dashes=True, linewidth=2.5,
         height=6, aspect=1,
-        facet_kws={'sharey': False}  # *** ĐÃ SỬA LỖI: Đặt sharey=False vào đúng chỗ ***
+        facet_kws={'sharey': False},  # *** ĐÃ SỬA LỖI: Đặt sharey=False vào đúng chỗ ***
+        estimator=None, ci=None
     )
     g_tps.fig.suptitle('Figure 15: Ảnh hưởng của Mạng (Thông lượng)', y=1.03, fontsize=16)
     g_tps.set_axis_labels("Thời gian Trễ Mạng (RTT) [ms]", "Thông lượng (TPS)")
@@ -584,7 +585,8 @@ def plot_figure_15_16(df):
         hue="Bandwidth", style="Bandwidth", col="System",
         kind="line", markers=True, dashes=True, linewidth=2.5,
         height=6, aspect=1,
-        facet_kws={'sharey': False}  # *** ĐÃ SỬA LỖI: Đặt sharey=False vào đúng chỗ ***
+        facet_kws={'sharey': False},  # *** ĐÃ SỬA LỖI: Đặt sharey=False vào đúng chỗ ***
+        estimator=None, ci=None
     )
     g_lat.fig.suptitle('Figure 16: Ảnh hưởng của Mạng (Độ trễ)', y=1.03, fontsize=16)
     g_lat.set_axis_labels("Thời gian Trễ Mạng (RTT) [ms]", "Độ trễ Trung bình (ms)")
